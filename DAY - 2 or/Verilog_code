@@ -1,0 +1,43 @@
+Verilog code for OR gate 
+
+(Data flow,Behavioral,Structural) and testbench
+
+//Data flow modelling
+module or_gate(input a,b,output c);
+  assign c=a|b;
+endmodule
+
+//structural modelling
+module or_gate(input a,b,output c);
+or o1(c,a,b);
+endmodule
+
+//behavioral modelling
+module or_gate(input a,b,output c);
+alwalys@(a or b)
+begin
+c=a|b;
+end
+endmodule
+
+
+//TESTBENCH
+module tb;
+ reg a,b;
+  wire c;
+  or_gate dut(.a(a),.b(b),.c(c));
+  initial
+    begin
+      $dumpfile("dump.vcd");$dumpvars;
+      a = 0 ; b = 0;
+      #10
+      a = 0 ; b = 1;
+      #10
+      a = 1 ; b = 0;
+      #10
+      a = 1 ; b = 1;
+      #10
+      $finish(); 
+    end
+endmodule
+
