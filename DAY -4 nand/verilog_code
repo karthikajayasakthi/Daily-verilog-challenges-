@@ -24,7 +24,7 @@ module tb;
   reg A;
   reg B;
   wire C;
-  andg DUT(.A(A),.B(B),.C(C));
+  nandg DUT(.A(A),.B(B),.C(C));
   initial
     begin
       $dumpfile("dump.vcd");$dumpvars;
