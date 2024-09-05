@@ -1,0 +1,40 @@
+verilog for NOR gate(data modelling,behavioral modelling,structural modelling)
+
+  //Data flow modelling
+module nor_gate(input a,b,output c);
+  assign c=~(a|b);
+endmodule
+
+//structural modelling
+module nor_gate(input a,b,output c);
+nor o1(c,a,b);
+endmodule
+
+
+//behavioral modelling
+module nor_gate(input a,b,output c);
+alwalys@(a or b)
+begin
+c=~(a|b);
+end
+endmodule
+
+//TESTBENCH
+module tb;
+ reg a,b;
+  wire c;
+  nor_gate dut(.a(a),.b(b),.c(c));
+  initial
+    begin
+      $dumpfile("dump.vcd");$dumpvars;
+      a = 0 ; b = 0;
+      #10
+      a = 0 ; b = 1;
+      #10
+      a = 1 ; b = 0;
+      #10
+      a = 1 ; b = 1;
+      #10
+      $finish(); 
+    end
+endmodule
