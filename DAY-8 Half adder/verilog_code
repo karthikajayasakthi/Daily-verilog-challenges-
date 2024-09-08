@@ -1,0 +1,42 @@
+HALF ADDER
+
+//DATA FLOW Modelling
+module HA(input a,b , output sum,carry);
+assign sum=a^b;
+assign carry =a&b;
+endmodule
+
+//BEHAVIORAL Modelling
+module HA(input a,b ,output sum,carry)
+always@(a or b)
+begin
+sum=a^b;
+carry=a&b;
+end
+endmodule
+
+//STRUCTURAL Modelling
+module HA(input a,b,output sum,carry);
+xor g1(sum,a,b);
+and g2(carry ,a,b);
+endmodule
+
+//TESTBENCH
+module tb;
+reg a,b;
+wire sum,carry;
+HA dut(.a(a),.b(b),.sum(sum),.carry(carry));
+initial 
+begin
+$dumpfile("dump.vcd");$dumpvars;
+ a = 0; b = 0;
+ #2
+ a = 0; b = 1;
+ #2
+ a = 1; b = 0;
+ #2
+ a = 1; b = 1;
+ #2
+ $finish();
+ end
+endmodule
