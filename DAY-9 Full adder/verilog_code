@@ -1,0 +1,52 @@
+
+FULL ADDER
+
+//DATA FLOW Modelling
+module FA(input a, b, c,output sum,carry);
+assign sum=a^b^c;
+assign carry=a&b|b&c|c&a;
+endmodule
+
+//BEHAVIORAL Modelling
+module FA(input a, b, c ,output sum,carry);
+alwals@(*)
+begin
+sum=a^b^c;
+carry=a&b|b&c|c&a;
+end
+endmodule
+
+//STRUCTURAL Modelling
+module FA(input a, b, c ,output sum,carry);
+half adder g1(w1,w2,a,b);
+half adder g2(sum,w3,w2,c);
+or g3(carry ,w3,w1);
+endmodule
+
+//TESTBENCH
+module tb;
+reg a,b,c;
+wire sum,carry;
+FA dut(.a(a),.b(b),.c(c),sum(sum),.carry(carry));
+initial
+begin
+$dumpfile("dump.vcd");$dumpvars;
+a=0 ; b=0 ; c=0 ;
+#10
+a=0 ; b=0 ; c=1 ;
+#10
+a=0 ; b=1 ; c=0;
+#10
+a=0 ; b=1 ; c=1;
+#10
+a=1 ; b=0; c=0 ;
+#10
+a=1 ; b=0 ; c=1;
+#10
+a=1;  b=1 ; c=0;
+#10
+a=1 ; b=1 ; c=1;
+#10
+$finish();
+end
+endmodule
