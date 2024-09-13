@@ -1,0 +1,48 @@
+RIPPLE CARRY ADDER
+
+//STRUCTURAL Modelling
+
+module full_adder(
+  input a, b, cin,
+  output sum, carry
+);
+
+assign sum = a ^ b ^ cin;          
+assign carry = (a & b) | (b & cin) | (a & cin); 
+endmodule 
+
+
+module ripplemod(
+  input [3:0] a, b,
+  input cin,
+  output [3:0] sum,
+  output cout
+);
+  
+  wire [2:0] carry;
+  full_adder f1(a[0], b[0], cin, sum[0], carry[0]);
+  full_adder f2(a[1], b[1], carry[0], sum[1], carry[1]);
+  full_adder f3(a[2], b[2], carry[1], sum[2], carry[2]);
+  full_adder f4(a[3], b[3], carry[2], sum[3], cout);
+endmodule
+
+//TESTBENCH
+
+
+module tb;
+  reg [3:0] a,b;
+  reg cin;
+  wire [3:0] sum;
+  wire cout;
+  ripplemod dut(.a(a),.b(b),.cin(cin),.sum(sum),.cout(cout));
+  initial 
+    begin
+       $dumpfile("dump.vcd");$dumpvars();
+      #10 a=4'b0001 ; b=4'b0001 ; cin=1'b0;
+      #10 a=4'b0001 ; b=4'b0001 ; cin=1'b1;
+      #10 a=4'b0010 ; b=4'b0011 ; cin=1'b1;
+      #10 a=4'b0101 ; b=4'b0110 ; cin=1'b0;
+      #10 a=4'b0011 ; b=4'b0111 ; cin=1'b1;
+      #10 $finish();
+    end
+endmodule
