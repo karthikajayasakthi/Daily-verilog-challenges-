@@ -1,0 +1,82 @@
+CARRY SKIP ADDER
+
+//DATA FLOW Modelling
+
+module carry_skip_adder (
+    input [3:0] a, b,  
+    input cin,         
+    output [3:0] sum,  
+    output cout        
+);
+
+    wire [3:0] p, g;   
+    wire c1, c2, c3;  
+
+    // Propagate and generate for each bit
+    assign p = a ^ b;  // Propagate
+    assign g = a & b;  // Generate
+
+    // Carry calculation using a carry-skip mechanism
+    assign c1 = g[0] | (p[0] & cin);
+    assign c2 = g[1] | (p[1] & c1);
+    assign c3 = g[2] | (p[2] & c2);
+    assign cout = g[3] | (p[3] & c3);
+
+    // Sum calculation
+    assign sum[0] = p[0] ^ cin;
+    assign sum[1] = p[1] ^ c1;
+    assign sum[2] = p[2] ^ c2;
+    assign sum[3] = p[3] ^ c3;
+
+endmodule
+
+//TESTBENCH
+
+module tb_carry_skip_adder;
+
+    reg [3:0] a, b;
+    reg cin;
+    wire [3:0] sum;
+    wire cout;
+
+    // Instantiate the carry-skip adder
+    carry_skip_adder uut (
+        .a(a),
+        .b(b),
+        .cin(cin),
+        .sum(sum),
+        .cout(cout)
+    );
+
+    initial begin
+        $dumpfile("dump.vcd");$dumpvars();
+        
+        // Test 1: a = 4'b0001, b = 4'b0010, cin = 0
+        a = 4'b0001;
+        b = 4'b0010;
+        cin = 0;
+        #10;
+
+        // Test 2: a = 4'b0101, b = 4'b1010, cin = 1
+        a = 4'b0101;
+        b = 4'b1010;
+        cin = 1;
+        #10;
+
+        // Test 3: a = 4'b1111, b = 4'b0001, cin = 0
+        a = 4'b1111;
+        b = 4'b0001;
+        cin = 0;
+        #10;
+
+        // Test 4: a = 4'b0110, b = 4'b1001, cin = 1
+        a = 4'b0110;
+        b = 4'b1001;
+        cin = 1;
+        #10;
+
+        // Finish simulation
+      $finish();
+    end
+
+endmodule
