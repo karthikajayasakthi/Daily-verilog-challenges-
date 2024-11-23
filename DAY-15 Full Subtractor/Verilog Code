@@ -1,0 +1,51 @@
+FULL SUBTRACTOR
+
+//DATA FLOW Modelling
+module FS(input a, b, c,output D,Bout);
+assign D=~a^b^c;
+assign Bout=~a&b|b&c|c&~a;
+endmodule
+
+//BEHAVIORAL Modelling
+module FS(input a, b, c ,output D,Bout);
+alwals@(*)
+begin
+D=~a^b^c;
+Bout=~a&b|b&c|c&~a;
+end
+endmodule
+
+//STRUCTURAL Modelling
+module FS(input a, b, c ,output D,Bout);
+half subtractor g1(w1,w2,a,b);
+half subtractor g2(D,w3,w2,c);
+or g3(Bout,w3,w1);
+endmodule
+
+//TESTBENCH
+module tb;
+reg a,b,c;
+wire sum,carry;
+FS dut(.a(a),.b(b),.c(c),D(D),.Bout(Bout));
+initial
+begin
+$dumpfile("dump.vcd");$dumpvars;
+a=0 ; b=0 ; c=0 ;
+#10
+a=0 ; b=0 ; c=1 ;
+#10
+a=0 ; b=1 ; c=0;
+#10
+a=0 ; b=1 ; c=1;
+#10
+a=1 ; b=0; c=0 ;
+#10
+a=1 ; b=0 ; c=1;
+#10
+a=1;  b=1 ; c=0;
+#10
+a=1 ; b=1 ; c=1;
+#10
+$finish();
+end
+endmodule
