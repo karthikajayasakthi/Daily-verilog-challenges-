@@ -1,0 +1,41 @@
+DAY-18
+ 
+//DEMUX
+
+//DATA MODELLING
+module 1_4demux(input D,output [3:0]y,input [1:0]S);
+assign Y0=D~S0~S1;
+
+aasign Y1=D~S0S1;
+
+assign Y2=DS0~S1;
+
+assign Y3=DS0S1;
+endmodule
+
+//BEHAVIORAL MODELLING 
+
+module 1_4demux(input D,output [3:0]y,input [1:0]S);
+reg [3:0]y;
+always@(*)begin
+case(s)
+2'b00:y[0]=4'b0001;
+2'b01:y[1]=4'b0010;
+2'b10:y[2]=4'b0100;
+2'b11:y[3]=4'b1000;
+endcase
+end 
+endmodule
+
+//STRUCTURAL MODELLING
+
+module 1_4demux(input D,output [3:0]y,input [1:0]S);
+wire m,n;
+not g1(m,s[0]);
+not g2(n,s[1]);
+and g3(y[0],D,m,n);
+and g4(y[1],D,m,s[1]);
+and g5(y[2],D,s[0],n);
+and g6(y[3],D,s[0],s[1]);
+endmodule
+
