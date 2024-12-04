@@ -3,44 +3,83 @@ DAY-17 MUX
 
 //DATA FLOW MODEL
 
-module 4to1_mux(
-input i1, i2, i3, i4, sel1, sel2,
-output out
-    );
-    assign out=sel2?(sel1? i4 : i3):(sel1 ? i2 : i1);
+module mux_8_1( input [7:0] y,input [2:0] s,output y );
+    assign y = (s == 3'b000) ? y[0] :
+                 (s == 3'b001) ? y[1] :
+                 (s == 3'b010) ? y[2] :
+                 (s == 3'b011) ? y[3] :
+                 (s == 3'b100) ? y[4] :
+                 (s == 3'b101) ? y[5] :
+                 (s == 3'b110) ? y[6] :y[7]; 
 endmodule
 
-//BHAVIORAL MODEL
+//BEHAVIORAL
+module mux_8_1(y,s,x);
+  input wire [7:0]y;
+  input wire [2:0]s;
+output reg x;
+  always@(*) begin
+    case(s)
+      3'b000:x=y[0];
+      3'b001:x=y[1];
+      3'b010:x=y[2];
+      3'b011:x=y[3];
+      3'b100:x=y[4];
+      3'b101:x=y[5];
+      3'b110:x=y[6];
+      3'b111:x=y[7];
+default:x=0;
+    endcase
+  end
+endmodule
 
-module 4to1_mux(
-input [3:0]i,
-input [1:0]s,
-output out
-    );
-always@(*) begin
-case(s)
-2'b00:out=i[0];
-2'b01:out=i[1];
-2'b10:out=i[2];
-2'b11:out=i[3];
-endcase
+//STRUCTURAL MODEL
+module mux_8_1(input [7:0] y,input [2:0] s, output y );
+    wire ns0,ns1, ns2; 
+    wire [7:0] m;  
+    not (ns0,s[0]);
+    not (ns1,s[1]);
+    not (ns2,s[2]);
+    and (m[0], y[0], ns2, ns1, ns0);  
+    and (m[1], [1], ns2, ns1, s[0]);  
+    and (m[2],y[2], ns2, s[1], ns0);  
+    and (m[3], y[3], ns2, s[1], s[0]); 
+    and (m[4], y[4], s[2], ns1, ns0); 
+    and (m[5], y[5], s[2], ns1, s[0]);  
+    and (m[6],y[6], s[2], s[1], ns0);  
+    and (m[7], y[7], s[2], s[1], s[0]); 
+    or (x, m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7]);
+endmodule
+
+//TESTBENCH
+module tb;
+  reg[7:0]y;
+  reg[2:0]s;
+wire x;
+ mux_8_1 dut(.y(y),.s(s),.x(x));
+initial
+begin
+  $dumpfile("dump.vcd");$dumpvars;
+//initialize input
+y=8'b0;
+s=3'b0;
+#10
+s=3'b000;
+#10
+s=3'b001;
+#10
+s=3'b010;
+#10
+s=3'b011;
+#10
+s=3'b100;
+#10
+s=3'b101;
+#10
+s=3'b110;
+#10
+s=3'b111;
+#10
+  $finish();
 end
 endmodule
-
-//structural modelling
-
-module 4to1_mux(
-input [3:0]i,
-input [1:0]s,
-output out
-    );
-wire m,n,w1,w2,w3,w4;
-not g1(m,s[0]);
-not g2(n,s[1]);
-and g3(w1,m,n,i[0]);
-and g4(w2,m,s[1],i[1]);
-and g5(w3,s[0],n,i[2]);
-and g6(w4,s[1],s[0],i[3]);
-or g7(out,w1,w2,w3,w4);
-endmodule
-
