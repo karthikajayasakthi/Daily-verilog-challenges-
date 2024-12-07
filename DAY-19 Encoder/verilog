@@ -1,0 +1,73 @@
+DAY-19
+ENCODER 8*3
+
+//DATAFLOW MODEL
+
+module enc_8_3(y,x);
+input [7:0]y;
+output [2:0]x;
+assign x[0]=y[7]|y[5]|y[3]|y[1];
+assign x[1]=y[7]|y[6]|y[3]|y[2];
+assign x[2]=y[7]|y[6]|y[5]|y[4];
+endmodule
+
+//STRUCTURAL MODEL
+
+module enc_8_3(y,x);
+input [7:0]y;
+output [2:0]x;
+or g1(x[2],y[7],y[6],y[5],y[4]);
+or g2(x[1],y[7],y[6],y[3],y[2]);
+or g3(x[0],y[7],y[5],y[3],y[1]);
+endmodule
+
+//BEHAVIORAL MODEL
+
+module enc_8_3(y,x);
+input [7:0]y;
+output reg [2:0]x;
+always@(*) 
+begin
+case(y)
+8'b10000000:x=3'b000;
+8'b01000000:x=3'b001;
+8'b00100000:x=3'b010;
+8'b00010000:x=3'b011;
+8'b00001000:x=3'b100;
+8'b00000100:x=3'b101;
+8'b00000010:x=3'b110;
+8'b00000001:x=3'b111;
+endcase
+end 
+endmodule
+
+
+//testbench
+
+module tb;
+reg [7:0] y;
+wire [2:0]x;
+enc_8_3 dut(.y(y),.x(x));
+initial 
+begin
+$dumpfile("dump.vcd");$dumpvars;
+#10
+y=8'b10000000;
+#10
+y=8'b01000000;
+#10
+y=8'b00100000;
+#10
+y=8'b00010000;
+#10
+y=8'b00001000;
+#10
+y=8'b00000100;
+#10
+y=8'b00000010;
+#10
+y=8'b00000001;
+#10
+$finish();
+end
+endmodule
