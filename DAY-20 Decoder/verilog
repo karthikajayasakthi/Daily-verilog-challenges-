@@ -1,0 +1,51 @@
+DAY-20 
+DECODER
+
+//BEHAVIORAL
+module dec_3_8(y,x);
+  input[2:0]y;
+  output reg [7:0]x;
+  always@(*)
+begin
+  case(y)
+3'b000:x=8'b10000000;
+3'b001:x=8'b01000000;
+3'b010:x=8'b00100000;
+3'b011:x=8'b00010000;
+3'b100:x=8'b00001000;
+3'b101:x=8'b00000100;
+3'b110:x=8'b00000010;
+3'b111:x=8'b00000001;
+  endcase
+end
+endmodule
+
+//TESTBENCH
+
+module tb;
+  reg [2:0]y;
+  wire [7:0]x;
+  dec_3_8 dut(.y(y),.x(x));
+initial
+begin
+  $dumpfile("dump.vcd");$dumpvars;
+#10
+y=3'b000;
+#10
+y=3'b001;
+#10
+y=3'b010;
+#10
+y=3'b011;
+#10
+y=3'b100;
+#10
+y=3'b101;
+#10
+y=3'b110;
+#10
+y=8'b111;
+#10
+  $finish();
+end
+endmodule
