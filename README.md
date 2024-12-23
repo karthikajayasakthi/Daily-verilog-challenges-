@@ -1,9 +1,9 @@
 OVERVIEW
 
-Welcome to the Daily Verilog Challenges.Overview of this challenge 30 days of verilog programming for basics digital design and verilog HDL by solving variety of verilog program in daily basis.
+Welcome to the Daily Verilog Challenges.Overview of this challenge 40 days of verilog programming for basics digital design and verilog HDL by solving variety of verilog program in daily basis.
 
 CHALLENGE
-  >>Duration :30 Days
+  >>Duration :40 Days
 
   >>tools used: EDA Playground
 
