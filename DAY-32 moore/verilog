@@ -1,0 +1,108 @@
+DAY-32 MOORE FSM
+
+//BEHAVIORAL
+
+module moore_fsm(
+    input clk, 
+    input rst, 
+    input x, 
+    output reg y
+);
+
+// State encoding
+parameter s0 = 2'b00; // State 0
+parameter s1 = 2'b01; // State 1
+parameter s2 = 2'b10; // State 2
+
+// Declare state registers
+reg [1:0] current_state, next_state;
+
+// Reset logic for current_state
+always @(posedge clk or posedge rst) begin
+    if (rst)
+        current_state <= s0; // Reset to state s0
+    else
+        current_state <= next_state; // Update state to next_state
+end
+
+// Next state logic
+always @(*) begin
+    case (current_state)
+        s0: next_state = x ? s1 : s0; // From state s0: if x=1, go to s1, else stay in s0
+        s1: next_state = x ? s1 : s2; // From state s1: if x=1, stay in s1, else go to s2
+        s2: next_state = x ? s1 : s0; // From state s2: if x=1, go to s1, else go to s0
+        default: next_state = s0; // Default state is s0
+    endcase
+end
+
+// Output logic for Moore FSM (output depends only on current state)
+always @(posedge clk or posedge rst) begin
+    if (rst)
+        y <= 0; // Reset output to 0
+    else begin
+        case (current_state)
+            s0: y <= 0; // Output 0 in state s0
+            s1: y <= 1; // Output 1 in state s1
+            s2: y <= 0; // Output 0 in state s2
+            default: y <= 0; // Default output is 0
+        endcase
+    end
+end
+
+endmodule
+
+
+//TESTBENCH
+
+module tb_moore_fsm;
+    reg clk;
+    reg rst;
+    reg x;
+    wire y;
+
+    // Instantiate the Moore FSM
+    moore_fsm uut (
+        .clk(clk),
+        .rst(rst),
+        .x(x),
+        .y(y)
+    );
+
+    // Generate clock
+    always begin
+        #5 clk = ~clk; // 10ns clock period
+    end
+
+    // Test procedure
+    initial begin
+        // Initialize signals
+        clk = 0;
+        rst = 0;
+        x = 0;
+
+        // Apply reset
+        rst = 1;
+        #10 rst = 0;
+
+        // Test case 1: x = 0, observe state transitions
+        #10 x = 0;
+        #10 x = 1;
+        #10 x = 0;
+        #10 x = 1;
+
+        // Test case 2: x = 1, observe state transitions
+        #10 x = 1;
+        #10 x = 0;
+        #10 x = 1;
+
+        // Finish simulation after some time
+        #50 $finish;
+    end
+
+    // Monitor the state and output
+    initial begin
+        $monitor("Time = %0d, x = %b, State = %b, Output = %b", $time, x, uut.current_state, y);
+    end
+endmodule
+
+
