@@ -1,0 +1,39 @@
+DAY-35 PIPO
+
+//BEHAVIORAL
+
+module pipos(clk,d,q);
+input clk;
+input [3:0]d;
+output reg [3:0]q;
+always@(posedge clk)
+begin
+q[3]<=d[3];
+q[2]<=d[2];
+q[1]<=d[1];
+q[0]<=d[0];
+end
+endmodule
+
+//TESTBENCH
+
+module tb_PIPO;
+    reg clk;
+    reg [3:0] d;
+    wire [3:0] q;
+    pipos uut (
+        .clk(clk),
+        .d(d),
+        .q(q)
+    ); 
+
+    initial begin
+      $dumpfile("dump.vcd");$dumpvars;
+        #10 d = 4'b1010;  
+        #10 d = 4'b1100;  
+        #10 d = 4'b1111;
+        #10;
+        $display("PIPO Output: %b", q);
+        $finish;
+    end
+endmodule
