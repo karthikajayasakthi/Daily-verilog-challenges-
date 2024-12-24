@@ -1,0 +1,45 @@
+DAY-38 SIPO
+
+//BEHAVIORAL
+
+module sipos(clk,si,q);
+input clk;
+input si;
+output reg[3:0]q;
+always@(posedge clk)
+begin
+q[3]<=si;
+q[2]<=q[3];
+q[1]<=q[2];
+q[0]<=q[1];
+end
+endmodule
+
+//BEHAVIORAL
+
+module tb_SIPO;
+    reg clk;
+    reg si;
+    wire [3:0] q;
+
+    // Instantiate the SIPO module
+    sipos uut (
+        .clk(clk),
+        .si(si),
+        .q(q)
+    );
+    initial begin
+      $dumpfile("dump.vcd");$dumpvars;
+        // Initialize signals
+        clk = 0;
+        si = 1'b0;
+        #10 si = 1'b1;  
+        #10 si = 1'b0;  
+        #10 si = 1'b1;  
+        #10 si = 1'b0;  
+        #10;
+        $display("SIPO Output: %b", q);
+        // Finish simulation
+      $finish();
+    end
+endmodule
