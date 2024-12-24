@@ -1,0 +1,52 @@
+DAY-36 PISO
+
+// BEHAVIORAL
+
+module pisos(clk,mode,d,s0);
+input clk,mode;
+input [3:0]d;
+output reg s0;
+reg [3:0]q=0;
+always@(posedge clk)
+begin
+if(mode)
+q<=d;
+else
+q[3]<=1'bx;
+q[2]<=q[3];
+q[1]<=q[2];
+q[0]<=q[1];
+end
+assign s0=q[0];
+endmodule
+
+//TESTBENCH
+
+module tb_PISO;
+    reg clk;
+    reg mode;
+    reg [3:0] d;
+    wire s0;
+
+    // Instantiate the PISO module
+    pisos uut (
+        .clk(clk),
+        .mode(mode),
+        .d(d),
+        .s0(s0)
+    );
+    initial begin
+      $dumpfile("dump.vcd");$dumpvars;
+        #10 d = 4'b1010; 
+        mode = 1'b1;   
+        #10 mode = 1'b0; 
+
+        #10; $display("PISO Output: %b", s0);
+        #10; $display("PISO Output: %b", s0);
+        #10; $display("PISO Output: %b", s0);
+        #10; $display("PISO Output: %b", s0);
+
+        //simulation
+      $finish();
+    end
+endmodule
